@@ -2,11 +2,13 @@ import React, { useEffect } from 'react'
 import {auth , googleAuth} from '../../config/firebase-config' 
 import {signInWithPopup} from 'firebase/auth'
 import {useNavigate} from 'react-router-dom'
+import { useGetUserInfo } from '../../hooks/useGetUserInfo' 
 import "./style.css"
 
 const Auth = () => {
 
     const navigate = useNavigate()
+    const {isAuth} = useGetUserInfo()
 
     const signInWithGoogle = async() =>{
         const results = await signInWithPopup(auth , googleAuth)
@@ -21,6 +23,12 @@ const Auth = () => {
         localStorage.setItem("auth", JSON.stringify(authInfo));
         navigate("/expense-tracker")
     };
+
+    useEffect(()=>{
+      if(isAuth){
+        navigate('/expense-tracker')
+      }
+    },[isAuth])
 
 
 
